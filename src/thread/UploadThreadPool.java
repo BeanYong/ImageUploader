@@ -5,6 +5,7 @@ import listener.UploadListener;
 import net.sf.json.JSONObject;
 import http.HttpRequest;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -62,6 +63,11 @@ public class UploadThreadPool {
      * @return 线程池实例
      */
     public static UploadThreadPool getInstance(ThreadPoolListener threadPoolListener) {
+        // 线程池繁忙，不允许创建对象
+        if (isBusy) {
+            return null;
+        }
+
         // 初始化
         init(threadPoolListener);
         return mInstance;
@@ -88,24 +94,26 @@ public class UploadThreadPool {
     /**
      * 上传图片
      *
-     * @param url      服务器api
-     * @param fileName 文件名
-     * @param bytes    文件字节数组
+     * @param url         服务器api
+     * @param fileName    文件名
+     * @param bytes       文件字节数组
+     * @param uploadLabel 进度反馈容器
      */
-    public void upload(String url, String fileName, byte[] bytes) {
+    public void upload(String url, String fileName, byte[] bytes, JLabel uploadLabel) {
         // 构建上传任务
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                HttpRequest.upload(url, fileName, bytes, new UploadListener() {
+                HttpRequest.upload(url, fileName, bytes, uploadLabel, new UploadListener() {
                     @Override
-                    public void onUploadSuccess(String response) {
+                    public void onUploadSuccess(String response, JLabel uploadLabel) {
                         JSONObject jsStr = JSONObject.fromObject(response);
                         // 上传完成，统计计数
                         if (jsStr.get("result").toString() == "true") {
                             // 上传成功
                             mSuccessCount += 1;
-                            System.out.println("上传成功" + mSuccessCount);
+                            uploadLabel.setText("正在上传第" + mSuccessCount + "张图片，请耐心等候......");
+                            uploadLabel.updateUI();
                         } else {
                             // 上传失败
                             mFailCount += 1;
@@ -116,6 +124,7 @@ public class UploadThreadPool {
                         if (mTasks.size() == 0) {
                             // 任务全部被执行完，回调传参
                             mThreadPoolListener.onThreadPoolFinished(mSuccessCount, mFailCount);
+                            isBusy = false;
                         } else {
                             // 继续执行任务
                             mThreadPool.execute(mTasks.remove(0));
@@ -132,6 +141,7 @@ public class UploadThreadPool {
                         if (mTasks.size() == 0) {
                             // 任务全部被执行完，回调传参
                             mThreadPoolListener.onThreadPoolFinished(mSuccessCount, mFailCount);
+                            isBusy = false;
                         } else {
                             // 继续执行任务
                             mThreadPool.execute(mTasks.remove(0));

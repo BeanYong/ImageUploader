@@ -189,7 +189,7 @@ public class Main {
                 // 判断是否为合法的目录
                 if (dirFile.isDirectory()) {
                     // 创建JLabel显示上传提示
-                    uploadLabel.setText("正在上传，请耐心等候......");
+                    uploadLabel.setText("正在上传第1张图片，请耐心等候......");
                     mPanel.add(uploadLabel);
                     mPanel.updateUI();
 
@@ -211,6 +211,15 @@ public class Main {
                         });
                     }
 
+                    // 禁止同时上传多个文件夹
+                    if(threadPool == null){
+                        JOptionPane.showMessageDialog(null, "请等待当前文件夹上传完成", "提示", JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+
+                    // 清空路径输入框
+                    dirPath.setText("");
+
                     // 将图片提交到线程池
                     for (File image : imageFiles) {
                         String imageName = image.getName();
@@ -219,7 +228,7 @@ public class Main {
                         if (imageName.contains(".") && "jpg".equalsIgnoreCase(imageName.split("\\.")[1])) {
                             // 将图片提交到线程池
                             byte[] bytes = FileUtil.fileToBytes(image);
-                            threadPool.upload(Constants.UPLOAD_URL, imageName, bytes);
+                            threadPool.upload(Constants.UPLOAD_URL, imageName, bytes, uploadLabel);
                         }
                     }
                 } else {

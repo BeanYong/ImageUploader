@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ImageUploader:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ImageUploader_jar</output-path>
+    <root id="archive" name="ImageUploader.jar">
+      <element id="module-output" name="ImageUploader" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/okio-1.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/commons-httpclient-3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/commons-lang-2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/commons-logging-1.0.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/ezmorph-1.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/json-lib-2.4-jdk15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/commons-collections-3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/commons-beanutils-1.7.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/okhttp-3.11.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

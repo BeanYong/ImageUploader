@@ -16,9 +16,10 @@ public class HttpRequest {
      * @param url            服务器api
      * @param fileName       文件名
      * @param bytes          文件字节数组
+     * @param uploadLabel    进度反馈容器
      * @param uploadListener 上传监听器
      */
-    public static void upload(String url, String fileName, byte[] bytes, UploadListener uploadListener) {
+    public static void upload(String url, String fileName, byte[] bytes, JLabel uploadLabel, UploadListener uploadListener) {
         try {
             OkHttpClient client = new OkHttpClient();
             MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
@@ -43,7 +44,7 @@ public class HttpRequest {
                     try {
                         String res = response.body().string();
                         response.body().close();
-                        uploadListener.onUploadSuccess(res);
+                        uploadListener.onUploadSuccess(res, uploadLabel);
                     } catch (IOException e) {
                         uploadListener.onUploadFailed(e);
                     }
